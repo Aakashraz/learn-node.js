@@ -18,7 +18,10 @@ const parse = require('csv-parse');
 const habitablePlanets = [];
 
 function isHabitablePlanets(planet) {
-        return (planet['koi_disposition']=== 'CONFIRMED' || planet['koi_disposition']==='CANDIDATE')
+    // Bracket Notation is used to access the element of javaScripts object,
+    // the incoming planet(data) is already converted to javaScripts objects.
+
+        return (planet['koi_disposition']=== 'CONFIRMED' || planet['koi_disposition']==='CANDIDATE')    // to make the condition work for OR logic by enclosing inside the brackets
             && planet['koi_insol'] > 0.36
             && planet['koi_insol'] < 1.11
             && planet['koi_prad'] < 1.6;
