@@ -76,17 +76,28 @@ server.on('request',(request,response) => {
     const items = request.url.split('/');
     //  '/friends/2' will yield ['', 'friends', '2']
 
-    if(items[1] === 'friends') {
+    if (request.method === 'POST' && items[1] === 'friends') {
+        request.on('data', chunk => {
+            const friend = chunk.toString();    // converting buffer chunk of data to string to make it readable
+            console.log(`chunk request data: ${friend}`);
+            friends.push(JSON.parse(friend));
+        })
+        // we don't need to call 'end' event because the 'pipe' event call will automatically end it.
+        request.pipe(response)
+    }
+
+    else if(request.method === "GET" && items[1] === 'friends') {
         // to Set the response header
-        // response.writeHead(2 00, {
-        //     'Content-Type': 'application/json',
-        // });
-        if (items.length ===3) {
+        response.writeHead(200, {
+            'Content-Type': 'application/json',
+        });
+
+        if (items.length === 3) {
             const friendIndex = Number(items[2]);
 
             console.log(`friendIndex: ${friendIndex} , friends.length:${friends.length}`);
-            // if the input number in friends/(number) is greater than available data
-            if (friendIndex > friends.length) {
+            // if the input number in 'friends/(number)' is greater than available data
+            if (friendIndex >= friends.length) {
                 response.statusCode= 404;
                 response.end('Not Found');
             }
@@ -97,18 +108,21 @@ server.on('request',(request,response) => {
             // To acknowledge the end of sending response data, 'response.end()' needs to be called everytime.
             // expects the json.stringify() to make enable to read a json object response
         }
-        }
+    }
+
     else if (items[1] === 'message') {
         response.statusCode = 200;
         response.setHeader('Content-Type', 'text/html; charset=UTF-8')
         response.end('THIS IS A MESSAGE');
         }
+
     else {
         response.statusCode = 404;
         response.end('Page Not Found');
         }
 
 });
+
 server.listen(3000, ()=>{
     console.log("Server started on port 3000");
 });
