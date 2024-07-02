@@ -57,21 +57,48 @@ const http = require('http');
 // this is an Event Emitter example
 const server = http.createServer();
 
+const friends = [
+    {
+        id: 0,
+        name: 'Niko Tesla'
+    },
+    {
+        id: 1,
+        name: 'Tom Edisson'
+    },
+    {
+        id: 2,
+        name: 'James Clerk Maxwell'
+    }
+]
+
 server.on('request',(request,response) => {
-    // to Set the response header
-    if(request.url === '/friends') {
-        response.writeHead(200, {
-            'Content-Type': 'application/json',
-        });
-        response.end(JSON.stringify({
-            id: 1,
-            name: 'aanjin',
-            age: '23',
-        }));
-        // To acknowledge the end of sending response data, this needs to be called everytime.
-        // expects the json.stringify() to make enable to read a json object response
+    const items = request.url.split('/');
+    //  '/friends/2' will yield ['', 'friends', '2']
+
+    if(items[1] === 'friends') {
+        // to Set the response header
+        // response.writeHead(2 00, {
+        //     'Content-Type': 'application/json',
+        // });
+        if (items.length ===3) {
+            const friendIndex = Number(items[2]);
+
+            console.log(`friendIndex: ${friendIndex} , friends.length:${friends.length}`);
+            // if the input number in friends/(number) is greater than available data
+            if (friendIndex > friends.length) {
+                response.statusCode= 404;
+                response.end('Not Found');
+            }
+            response.end(JSON.stringify(friends[friendIndex]))
         }
-    else if (request.url === '/message') {
+        else {
+            response.end(JSON.stringify(friends));
+            // To acknowledge the end of sending response data, 'response.end()' needs to be called everytime.
+            // expects the json.stringify() to make enable to read a json object response
+        }
+        }
+    else if (items[1] === 'message') {
         response.statusCode = 200;
         response.setHeader('Content-Type', 'text/html; charset=UTF-8')
         response.end('THIS IS A MESSAGE');
