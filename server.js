@@ -151,6 +151,15 @@ const friends = [{
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
 
+// Middleware uses;
+app.use((req, res, next) => {
+    const startTime = Date.now();
+    next();
+    const delta = Date.now() - startTime;
+    console.log(`${req.method} ${req.url}, Middleware Time:${delta}ms`);
+
+});
+
 app.get('/friends', (req, res) => {
     res.json(friends);
 })
