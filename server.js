@@ -134,20 +134,10 @@
 const express = require('express');
 const app = express();
 
+const messagesController = require('./controllers/messages.controller')
+const friendsController = require('./controllers/friends.controller')
 const PORT = 3000;
-const friends = [{
-    id: 0,
-    name: 'Sir Issac Newton'
-    },
-    {
-        id: 1,
-        name: 'Albert Einstein'
-    },
-    {
-        id: 2,
-        name: 'Alexa Einstein'
-    }
-];
+
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
 
@@ -160,28 +150,16 @@ app.use((req, res, next) => {
 
 });
 
-app.get('/friends', (req, res) => {
-    res.json(friends);
-})
+// Built-in Middleware Usage.
+app.use(express.json())
 
-app.get('/friends/:id', (req, res) => {
-        const id = req.params.id;
-        const friend = friends[id];
-        // Validation of the data: friend exist or not.
-        if (friend) {
-            res.json(friend);
-        }
-        else {
-            res.status(404).json({
-                message: 'Friend not found.'
-            });
-        }
-    })
+// route handlers.
+app.post('/friends', friendsController.postFriend)
 
-app.get('/message', (req,res)=> {
-    res.send('<ul><li>Hello James Clerk Maxwell</li></ul>')
-})
+app.get('/friends', friendsController.getFriends)
 
-app.post('/message', (req,res)=> {
-    console.log("Updating message ...")
-})
+app.get('/friends/:id', friendsController.getFriend)
+
+app.get('/message', messagesController.getMessage );
+
+app.post('/message', messagesController.postMessage);
