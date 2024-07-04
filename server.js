@@ -160,6 +160,24 @@ app.use((req, res, next) => {
 
 });
 
+// Built-in Middleware Usage.
+app.use(express.json())
+
+app.post('/friends', (req, res) => {
+    if (!req.body.name) {
+        // use return to avoid while encountering no/empty data.
+        return res.status(400).json({
+            message: "Friend's name is required."
+        })
+    }
+    const newFriend = {
+        id: friends.length,
+        name: req.body.name,
+    };
+    friends.push(newFriend);
+    return res.json(friends)
+})
+
 app.get('/friends', (req, res) => {
     res.json(friends);
 })
