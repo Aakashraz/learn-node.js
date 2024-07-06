@@ -3,7 +3,7 @@ const model = require('../models/friends.model')
 
 function getFriend(req, res) {
     const id = Number(req.params.id);
-    const friend = model.friends[id];
+    const friend = model[id];
     // Validation of the data: friend exist or not.
     if (friend) {
         res.json(friend);
@@ -15,8 +15,8 @@ function getFriend(req, res) {
     }
 }
 
-function getFriends (req, res) {
-    res.json(model.friends);
+function getAllFriends (req, res) {
+    res.json(model);
 }
 
 function postFriend(req, res) {
@@ -27,16 +27,16 @@ function postFriend(req, res) {
         })
     }
     const newFriend = {
-        id: model.friends.length,
+        id: model.length,
         name: req.body.name,
     };
-    model.friends.push(newFriend);
+    model.push(newFriend);
     return res.json(newFriend)
 }
 
 module.exports = {
     getFriend,
-    getFriends,
+    getAllFriends,
     postFriend,
 }
 
