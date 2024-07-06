@@ -1,5 +1,10 @@
+const path = require('path');
+// to fetch absolute path
+
 function getMessage(req,res) {
-    res.send('<ul><li>Hello James Clerk Maxwell</li></ul>')
+    // to send a photo file
+    res.sendfile(path.join(__dirname, '..', 'public', 'car.jpg'))
+    // res.send('<ul><li>Hello James Clerk Maxwell</li></ul>')
 }
 
 function postMessage(req,res) {

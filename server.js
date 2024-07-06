@@ -129,15 +129,17 @@
 
 
 
-//  --------------------------------    Express.js  ------------------------------------------------
+//  -------------------------------------------    Express.js  ------------------------------------------------
+
+
 
 const express = require('express');
 const app = express();
 
-const messagesController = require('./controllers/messages.controller')
-const friendsController = require('./controllers/friends.controller')
-const PORT = 3000;
+const friendsRouter = require('./routes/friends.router');
+const messagesRouter = require('./routes/messages.router');
 
+const PORT = 3000;
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
 
@@ -146,20 +148,12 @@ app.use((req, res, next) => {
     const startTime = Date.now();
     next();
     const delta = Date.now() - startTime;
-    console.log(`${req.method} ${req.url}, Middleware Time:${delta}ms`);
+    console.log(`${req.method}${req.baseUrl} ${req.url}, Middleware Time:${delta}ms`);
 
 });
 
-// Built-in Middleware Usage.
-app.use(express.json())
+// Built-in Middleware to parse JSON bodies.
+app.use(express.json());
 
-// route handlers.
-app.post('/friends', friendsController.postFriend)
-
-app.get('/friends', friendsController.getFriends)
-
-app.get('/friends/:id', friendsController.getFriend)
-
-app.get('/message', messagesController.getMessage );
-
-app.post('/message', messagesController.postMessage);
+app.use('/friends', friendsRouter);
+app.use('/messages', messagesRouter);
