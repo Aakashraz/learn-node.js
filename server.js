@@ -141,6 +141,10 @@ const friendsRouter = require('./routes/friends.router');
 const messagesRouter = require('./routes/messages.router');
 
 const PORT = 3000;
+// to set handlebars template engine
+app.set('view engine','hbs')
+app.set('views', path.join(__dirname,'views'))
+// Using __dirname ensures that the path is always correct, regardless of where you start the Node process from.
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
 
@@ -153,6 +157,7 @@ app.use((req, res, next) => {
 
 });
 
+// use of static middleware
 app.use('/site', express.static(path.join(__dirname,'public')));
 // It's used to serve static files such as images, CSS files, and JavaScript files.
 // It makes the files in the specified directory publicly accessible.
@@ -162,3 +167,10 @@ app.use(express.json());
 
 app.use('/friends', friendsRouter);
 app.use('/messages', messagesRouter);
+
+app.get('/', (req, res) => {
+    res.render('index', {
+        title: 'Node.js',
+        captions: 'Everest is the Greatest.'
+    })
+})
