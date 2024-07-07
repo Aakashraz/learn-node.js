@@ -135,6 +135,7 @@
 
 const express = require('express');
 const app = express();
+const path = require('path');
 
 const friendsRouter = require('./routes/friends.router');
 const messagesRouter = require('./routes/messages.router');
@@ -152,8 +153,12 @@ app.use((req, res, next) => {
 
 });
 
-// Built-in Middleware to parse JSON bodies.
+app.use('/site', express.static(path.join(__dirname,'public')));
+// It's used to serve static files such as images, CSS files, and JavaScript files.
+// It makes the files in the specified directory publicly accessible.
+
 app.use(express.json());
+// Built-in Middleware to parse JSON bodies.
 
 app.use('/friends', friendsRouter);
 app.use('/messages', messagesRouter);
